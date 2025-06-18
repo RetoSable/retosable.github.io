@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Speech API 音声認識</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            text-align: center;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            color: #0056b3;
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #status {
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #555;
+        }
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            min-height: 100px;
+            background-color: white;
+            text-align: left;
+            font-size: 1.2em;
+            color: #222;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            white-space: pre-wrap; /* 改行を保持 */
+            word-wrap: break-word; /* 長い単語の折り返し */
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Web Speech API 音声認識デモ</h1>
+    <p>「音声認識を開始」ボタンをクリックして、マイクに向かって話してください。</p>
+
+    <button id="startButton">音声認識を開始</button>
+    <div id="status"></div>
+    <div id="result">ここに認識結果が表示されます。</div>
+
+    <script>
+        // Web Speech API の SpeechRecognition オブジェクトを初期化
+        // 互換性のために window.SpeechRecognition と window.webkitSpeechRecognition の両方をチェック
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+
+            // 認識したい言語を設定 (例: 日本語)
+            recognition.lang = 'ja-JP';
+
+            // 途中結果を返すかどうか (false にすると、確定した結果のみを返す)
+            recognition.interimResults = false;
+
+            // 連続的に認識するかどうか (false にすると、一度話が終わると停止する)
+            recognition.continuous = false;
+
+            const startButton = document.getElementById('startButton');
+            const statusDiv = document.getElementById('status');
+            const resultDiv = document.getElementById('result');
+
+            // 音声認識が結果を返したときに実行されるイベントハンドラ
+            recognition.onresult = (event) => {
+                // event.results に認識結果が格納されている
+                // [0] は最初の結果セット、[0] はその中の最も信頼性の高い代替案
+                const speechResult = event.results[0][0].transcript;
+                resultDiv.textContent = speechResult;
+                statusDiv.textContent = '認識完了！';
+            };
+
+            // 音声認識中にエラーが発生したときに実行されるイベントハンドラ
+            recognition.onerror = (event) => {
+                statusDiv.
