@@ -3,77 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>外部テキスト読み込みの例</title>
+    <title>JSONデータ読み込みデモ</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 30px;
-            background-color: #f0f8ff;
+            background-color: #f9f9f9;
             color: #333;
-        }
-        h1 {
-            color: #2c3e50;
-        }
-        #content-area {
-            margin-top: 25px;
-            padding: 20px;
-            border: 1px solid #a8dadc;
-            border-radius: 8px;
-            background-color: #e0f7fa;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        p {
             line-height: 1.6;
         }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        section {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        #news-body {
+            white-space: pre-wrap; /* 改行を保持 */
+        }
+        .contact-detail {
+            margin-bottom: 8px;
+        }
         .loading {
-            color: #5a5a5a;
+            color: #888;
             font-style: italic;
         }
         .error {
             color: #e74c3c;
             font-weight: bold;
         }
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
-    <h1>私たちのウェブサイトへようこそ！</h1>
-    <p>このページは、JavaScriptを使って外部のテキストファイルを読み込むデモです。</p>
+    <header>
+        <h1 id="header-page-title" class="loading">ページタイトルを読み込み中...</h1>
+    </header>
 
-    <h2>今日のメッセージ:</h2>
-    <div id="content-area" class="loading">
-        コンテンツを読み込み中...
-    </div>
+    <main>
+        <section>
+            <h2>最新ニュース</h2>
+            <h3 id="news-headline" class="loading">ニュース見出しを読み込み中...</h3>
+            <p id="news-body" class="loading">ニュース本文を読み込み中...</p>
+        </section>
+
+        <section>
+            <h2>お問い合わせ</h2>
+            <div id="contact-details">
+                <p><strong class="loading">担当:</strong> <span id="contact-name" class="loading">読み込み中...</span></p>
+                <p><strong class="loading">Email:</strong> <span id="contact-email" class="loading">読み込み中...</span></p>
+                <p><strong class="loading">電話:</strong> <span id="contact-phone" class="loading">読み込み中...</span></p>
+            </div>
+            <p id="important-note" class="loading">重要なメモを読み込み中...</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 JSONデータデモ</p>
+    </footer>
 
     <script>
-        // 外部テキストファイルのパスを指定します。
-        // この例では、index.html と同じフォルダに 'message.txt' があることを想定しています。
-        const filePath = 'message.txt';
+        // 読み込むJSONファイルのパスを指定します。
+        const jsonFilePath = 'data.json'; // index.html と同じフォルダにあることを想定
 
-        // 外部コンテンツを表示するHTML要素を取得します。
-        const contentArea = document.getElementById('content-area');
+        // データ表示用のHTML要素を取得します。
+        const headerPageTitle = document.getElementById('header-page-title');
+        const newsHeadline = document.getElementById('news-headline');
+        const newsBody = document.getElementById('news-body');
+        const contactName = document.getElementById('contact-name');
+        const contactEmail = document.getElementById('contact-email');
+        const contactPhone = document.getElementById('contact-phone');
+        const importantNote = document.getElementById('important-note');
 
-        // Fetch API を使ってファイルを読み込みます。
-        fetch(filePath)
+        // すべての loading クラスを持つ要素を取得（エラー時にまとめて処理するため）
+        const loadingElements = document.querySelectorAll('.loading');
+
+        // Fetch API を使ってJSONファイルを読み込みます。
+        fetch(jsonFilePath)
             .then(response => {
-                // HTTPレスポンスが正常かチェックします (例: 200 OK)
                 if (!response.ok) {
-                    // エラーがあれば、エラーメッセージとともに例外をスローします。
-                    throw new Error(`ファイルが見つからないか、読み込めませんでした: ${response.status} ${response.statusText}`);
+                    throw new Error(`ファイルの読み込みに失敗しました: ${response.status} ${response.statusText}`);
                 }
-                // レスポンスの本文をテキストとして取得します。
-                return response.text();
+                // レスポンスの本文をJSONとしてパースします。
+                return response.json();
             })
             .then(data => {
-                // 取得したテキストデータをHTML要素に挿入します。
-                contentArea.textContent = data; // テキストとして挿入 (HTMLタグはそのまま表示される)
-                contentArea.classList.remove('loading'); // ローディング表示を削除
+                // JSONデータからそれぞれの値を抽出し、対応するHTML要素に挿入します。
+
+                // ページタイトル
+                if (data.pageTitle) {
+                    headerPageTitle.textContent = data.pageTitle;
+                }
+
+                // ニュースセクション
+                if (data.newsHeadline) {
+                    newsHeadline.textContent = data.newsHeadline;
+                }
+                if (data.newsBody) {
+                    newsBody.textContent = data.newsBody;
+                }
+
+                // お問い合わせセクション
+                if (data.contactInfo) {
+                    if (data.contactInfo.name) {
+                        contactName.textContent = data.contactInfo.name;
+                    }
+                    if (data.contactInfo.email) {
+                        contactEmail.textContent = data.contactInfo.email;
+                    }
+                    if (data.contactInfo.phone) {
+                        contactPhone.textContent = data.contactInfo.phone;
+                    }
+                }
+                if (data.importantNote) {
+                    importantNote.textContent = data.importantNote;
+                }
+
+                // すべての要素からローディングクラスを削除します。
+                loadingElements.forEach(el => el.classList.remove('loading'));
+
             })
             .catch(error => {
-                // ファイルの読み込みや処理中にエラーが発生した場合の処理
-                console.error('コンテンツの読み込みエラー:', error);
-                contentArea.textContent = `エラー: コンテンツを読み込めませんでした。(${error.message})`;
-                contentArea.classList.remove('loading');
-                contentArea.classList.add('error'); // エラー表示用のスタイルを追加
+                // エラーが発生した場合の処理
+                console.error('JSONデータの読み込みまたは処理中にエラー:', error);
+                // エラーメッセージを適切な場所に表示
+                loadingElements.forEach(el => {
+                    el.textContent = '読み込みエラー';
+                    el.classList.add('error');
+                    el.classList.remove('loading');
+                });
+                headerPageTitle.textContent = 'エラーが発生しました';
             });
     </script>
 </body>
