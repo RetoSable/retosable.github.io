@@ -3,96 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Speech API 音声認識</title>
+    <title>外部テキスト読み込みの例</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 40px;
-            text-align: center;
-            background-color: #f4f4f4;
+            margin: 30px;
+            background-color: #f0f8ff;
             color: #333;
         }
         h1 {
-            color: #0056b3;
+            color: #2c3e50;
         }
-        button {
-            padding: 12px 25px;
-            font-size: 18px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            margin-top: 20px;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        #status {
-            margin-top: 20px;
-            font-size: 1.1em;
-            color: #555;
-        }
-        #result {
-            margin-top: 30px;
+        #content-area {
+            margin-top: 25px;
             padding: 20px;
-            border: 1px solid #ccc;
+            border: 1px solid #a8dadc;
             border-radius: 8px;
-            min-height: 100px;
-            background-color: white;
-            text-align: left;
-            font-size: 1.2em;
-            color: #222;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            white-space: pre-wrap; /* 改行を保持 */
-            word-wrap: break-word; /* 長い単語の折り返し */
+            background-color: #e0f7fa;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        p {
+            line-height: 1.6;
+        }
+        .loading {
+            color: #5a5a5a;
+            font-style: italic;
         }
         .error {
-            color: red;
+            color: #e74c3c;
             font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <a href='page1.html'>page1</a>
-    <h1>Web Speech API 音声認識デモ</h1>
-    <p>「音声認識を開始」ボタンをクリックして、マイクに向かって話してください。</p>
+    <h1>私たちのウェブサイトへようこそ！</h1>
+    <p>このページは、JavaScriptを使って外部のテキストファイルを読み込むデモです。</p>
 
-    <button id="startButton">音声認識を開始</button>
-    <div id="status"></div>
-    <div id="result">ここに認識結果が表示されます。</div>
+    <h2>今日のメッセージ:</h2>
+    <div id="content-area" class="loading">
+        コンテンツを読み込み中...
+    </div>
 
     <script>
-        // Web Speech API の SpeechRecognition オブジェクトを初期化
-        // 互換性のために window.SpeechRecognition と window.webkitSpeechRecognition の両方をチェック
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        // 外部テキストファイルのパスを指定します。
+        // この例では、index.html と同じフォルダに 'message.txt' があることを想定しています。
+        const filePath = 'message.txt';
 
-        if (SpeechRecognition) {
-            const recognition = new SpeechRecognition();
+        // 外部コンテンツを表示するHTML要素を取得します。
+        const contentArea = document.getElementById('content-area');
 
-            // 認識したい言語を設定 (例: 日本語)
-            recognition.lang = 'ja-JP';
-
-            // 途中結果を返すかどうか (false にすると、確定した結果のみを返す)
-            recognition.interimResults = false;
-
-            // 連続的に認識するかどうか (false にすると、一度話が終わると停止する)
-            recognition.continuous = false;
-
-            const startButton = document.getElementById('startButton');
-            const statusDiv = document.getElementById('status');
-            const resultDiv = document.getElementById('result');
-
-            // 音声認識が結果を返したときに実行されるイベントハンドラ
-            recognition.onresult = (event) => {
-                // event.results に認識結果が格納されている
-                // [0] は最初の結果セット、[0] はその中の最も信頼性の高い代替案
-                const speechResult = event.results[0][0].transcript;
-                resultDiv.textContent = speechResult;
-                statusDiv.textContent = '認識完了！';
-            };
-
-            // 音声認識中にエラーが発生したときに実行されるイベントハンドラ
-            recognition.onerror = (event) => {
-                statusDiv.
+        // Fetch API を使ってファイルを読み込みます。
+        fetch(filePath)
+            .then(response => {
+                // HTTPレスポンスが正常かチェックします (例: 200 OK)
+                if (!response.ok) {
+                    // エラーがあれば、エラーメッセージとともに例外をスローします。
+                    throw new Error(`ファイルが見つからないか、読み込めませんでした: ${response.status} ${response.statusText}`);
+                }
+                // レスポンスの本文をテキストとして取得します。
+                return response.text();
+            })
+            .then(data => {
+                // 取得したテキストデータをHTML要素に挿入します。
+                contentArea.textContent = data; // テキストとして挿入 (HTMLタグはそのまま表示される)
+                contentArea.classList.remove('loading'); // ローディング表示を削除
+            })
+            .catch(error => {
+                // ファイルの読み込みや処理中にエラーが発生した場合の処理
+                console.error('コンテンツの読み込みエラー:', error);
+                contentArea.textContent = `エラー: コンテンツを読み込めませんでした。(${error.message})`;
+                contentArea.classList.remove('loading');
+                contentArea.classList.add('error'); // エラー表示用のスタイルを追加
+            });
+    </script>
+</body>
+</html>
