@@ -1,0 +1,150 @@
+/* 基本のリセットとフォント設定 */
+*, *::before, *::after {
+    box-sizing: border-box; /* paddingやborderをwidth/heightに含める */
+    margin: 0;
+    padding: 0;
+}
+
+
+
+/* --- トップカード --- */
+.top_card{
+    padding: 10px;
+    background-image: url(/image/top_card.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+.top_card_inner {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: white;
+    font-size: 1.5em;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.random_string{
+    width: 75%;
+    height: 100%;
+    border-right-width: 2px;
+    border-right-color: white;
+    border-right-style: solid;
+    min-height: 300px;
+    display: flex; 
+}
+.random_string_inner{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin:auto;
+    
+}
+.random_string_inner *{
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+}
+.random_string_inner p{
+    font-size: 0.7em;
+}
+
+.notice{
+    
+    height: 100%;
+    width: 25%;
+}
+.notice_inner{
+    height: 100%;
+    margin: 10px;
+    padding:10px;
+    min-height: 280px;
+    border-radius: 10px;
+    background-color: rgba(255, 228, 196, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+.notice_content{
+    text-align: center;
+    color:black;
+    font-size: 0.7em;
+}
+
+/* 普通のカード */
+.card {
+    margin: 20px auto;
+    background-color:white;
+    background-color: white;
+}
+
+
+.card_inner {
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    height: 100%;
+    line-height: 2;
+}
+
+.card_image{
+    display: flex;
+    align-items: center;
+    max-width: 33%;
+    height: auto;
+    border-radius: 5px;
+}
+.card_image img{
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+}
+
+.card:nth-child(2n+1) .card_inner { /* 奇数番目 */
+    flex-direction: row-reverse;
+}
+
+.card:nth-child(2n) .card_inner { /* 偶数番目 */
+    flex-direction: row;
+}
+
+    .card:last-child .card_inner{ /* 最後のカード */
+    flex-direction: row-reverse;
+}
+
+.introduction {
+    flex-grow: 1;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.midashi {
+    font-size: 2em;
+    font-weight: bold;
+    color: rgb(0, 162, 255); /* 見出しの色 */
+    margin-bottom: 10px;
+    border-bottom: 2px solid #313131;
+    padding-bottom: 5px;
+    display: flex;
+}
+
+.midashi h3{
+    margin: 0 auto;
+}
+.introduction_content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.introduction_content p {
+    text-align: center;
+    font-size: 1.7em;
+}

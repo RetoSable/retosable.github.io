@@ -1,0 +1,88 @@
+@charset "utf-8";
+/* リセットcss */
+
+/* ベース */
+body{
+    font-family: sans-serif;
+    line-height: 1.6;
+    color: black;
+    background-color: white;
+}
+/* ヘッダー */
+header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.header_inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 25px;
+}
+
+.header_logo {
+    height: 50px;
+    width: auto;
+    display: block;
+}
+
+/* メイン */
+main {
+    /* max-width: 1200px; */
+    margin: 0 auto;
+    /* padding: 0 20px; */
+    padding: 0 0;
+    flex-direction: column;
+}
+
+/* フッター */
+footer {
+    background-color: #34495e;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.footer_inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer_logo {
+    height: 40px;
+    width: auto;
+    display: block;
+}
+
+.footer_inner small {
+    font-size: 0.85em;
+    color: #bbb;
+}
+
+/* サイトナビ */
+.site_nav {
+    list-style: none;
+    display: flex;
+    gap: 50px;
+}
+
+.site_nav li {
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease; /* ホバー時のアニメーション */
+}
+
+.site_nav li:hover {
+    color: #4CAF50; /* ホバー時の色 */
+}
