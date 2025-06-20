@@ -1,5 +1,9 @@
 @charset "utf-8";
 /* リセットcss */
+a {
+  text-decoration: none;
+  color: inherit;
+}
 
 /* ベース */
 body{
